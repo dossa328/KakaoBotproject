@@ -127,7 +127,7 @@ else if (strcmp($content, '적절한(부적절한)소화제') == false){
                         'keyboard' => array(
                                 'type' => 'buttons',
                                 'buttons' => array(
-					'소화제는 없습니다','처음으로'
+					'소화제는 없습니다','처음으로','소화제 있음'
                                 )
                         )
                 )
