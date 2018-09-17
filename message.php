@@ -11,14 +11,14 @@ if (strcmp($content,'대화 시작') == false || strcmp($content,'처음으로')
 			'message' => array(
 				'text' => '봇 시작'
 			),
-                        'keyboard' => array(
-                                'type' => 'buttons',
+            'keyboard' => array(
+                'type' => 'buttons',
 				'buttons' => array(
 					'화학 물질명 검색','처음으로'
 				)
-                        )
-                )
-        );
+            )
+        )
+    );
 }
 
 else if(strcmp($content,'화학 물질명 검색') == false){	
