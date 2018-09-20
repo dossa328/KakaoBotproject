@@ -3,8 +3,48 @@
 $data = json_decode(file_get_contents('php://input'), true);
 // 요청에서 content 항목 결정
 $content = $data["content"];
-$type = $data['type'];
-//$content = '대화시작';
+$user_key = $data["user_key"];
+//$info_array = array("화학제품에 대한 정보","유해성, 위험성","응급조치 요령","폭발, 화재시 대처방법","누출사고시 대처방법");
+$info_array = array("의 정보","의 유해성과 위험성","의 응급조치 요령","의 폭발 및 화재시 대처방법","의 누출사고시 대처방법");
+//$type = $data['type'];
+// $user_key = $data[
+// $content = '대화시작';
+$len_info_array = count($info_array);
+
+if(strpos($content,'*') !== false){
+	//$content2 = (string)strstr($content,'*');
+	//$content2_divide = explode('*', $content2);
+	$content2 = str_replace('*','',$content);
+	
+	
+	
+	for($len_i=0; $len_i<$len_info_array; $len_i++)
+	{
+		$info_array_output = $info_array_output.$content2.$info_array[$len_i].'&';
+		
+		//$chemlist = $chemlist.'*'.$x->chemNameKor.'&';
+		//$searchChemlist = explode('&', $chemlist);
+	}
+	$info_array_output = $info_array_output.'처음으로';
+	
+	$info_array_output_fianl = explode('&', $info_array_output);
+	
+	
+	echo json_encode(
+		array(
+			'message' => array(
+				'text' => "조회한 화학물질명은 [".$info_array_output."] 입니다."
+//				'text' => $info_array_output
+			),
+			//'buttons' => array(
+			//'화학제품에 대한 정보','유해성, 위험성','응급조치 요령','폭발, 화재시 대처방법','누출사고시 대처방법','처음으로'
+			'keyboard' => array(
+				'type' => 'buttons',
+				'buttons' => $info_array_output_fianl
+			)
+		)
+	);
+}
 
 if(strcmp($content,'대화 시작') == false || strcmp($content,'처음으로')==false) {
 	echo json_encode(
@@ -33,6 +73,7 @@ else if(strcmp($content,'화학 물질명 검색') == false){
 		)
 	);
 }
+
 else{
 //	$data = json_decode(file_get_contents('php://input'), true);
 	// 요청에서 content 항목 결정
@@ -60,7 +101,7 @@ else{
 		//검색된 화학물질명 읽어오고
 		$x = $xml_info->body->items->item[$i];		
 		
-		$chemlist = $chemlist.$x->chemNameKor.'&';
+		$chemlist = $chemlist.'*'.$x->chemNameKor.'&';
 		/*
 		$x = $xml_info->body->items->item[$i];
 		$x_n = $xml_info->body->items->item->chemId;
@@ -138,7 +179,8 @@ else{
 					)
 			);
 	}
-
+	
+	/*
 	else if(strpos($content,'조회') !== false){
 
 		$cut_stringTok = explode(' ',$content);
@@ -157,6 +199,7 @@ else{
 					)
 			);
 	}
+	*/
 	else{
 		echo json_encode(
 					array(
