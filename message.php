@@ -10,6 +10,7 @@ $info_array = array("의정보","의 유해성과 위험성","의응급조치요
 //$type = $data['type'];
 // $user_key = $data[
 // $content = '대화시작';
+$chemlist_chemid = Array();
 
 $len_info_array = count($info_array);
 
@@ -38,7 +39,7 @@ if(strpos($content,'*') !== false){
 	echo json_encode(
 		array(
 			'message' => array(
-				'text' => "조회한 화학물질명은 [".$content."] 입니다."
+				'text' => "조회한 화학물질명은 [".$content2."] 입니다."
 //				'text' => $info_array_output
 			),
 			//'buttons' => array(
@@ -57,7 +58,7 @@ if(strcmp($content,'대화 시작') == false || strcmp($content,'처음으로')=
 	echo json_encode(
 		array(
 			'message' => array(
-				'text' => '봇 시작'
+				'text' => '화학사고대응봇과 대화 시작'
 			),
             'keyboard' => array(
                 'type' => 'buttons',
@@ -109,6 +110,13 @@ else{
 		$x = $xml_info->body->items->item[$i];
 		
 		$chemlist = $chemlist.'*'.$x->chemNameKor.'&';
+		//print_r($x);
+		$chemName_input = (string)($x->chemNameKor);
+		$chemId_input = (string)($x->chemId);
+		$chemlist_chemid[$chemName_input] = $chemId_input;
+		
+		//print_r($chemlist_chemid);
+		
 		/*
 		$x = $xml_info->body->items->item[$i];
 		$x_n = $xml_info->body->items->item->chemId;
@@ -124,6 +132,9 @@ else{
 		$sum_act = (string)"how to action after accident -> ".$x->itemDetail.'<br>';
 		*/
 	}
+	//echo $chemName_input. '%%%%%' . $chemId_input;
+	//echo "dlrjsadjfaksdf -> ".$chemlist_chemid['벤젠'];
+	
 	$chemlist = $chemlist.'처음으로';
 	$searchChemlist = explode('&', $chemlist);
 
@@ -133,12 +144,14 @@ else{
 		array(
 			'message' => array(
 				'text' => "검색한 화학물질은 ".$content."입니다."."\n"."검색된 화학물질명이 포함된 물질은 총 ".$num."개 입니다. 조회를 원하는 물질명을 선택해주세요."
+				//'text' => $chemlist_chemid
 			),
 			'keyboard' => array(
 				'type' => 'buttons',
 //				'buttons' => array(
 //				'염산 오라민','염산 구아니딘','염산 디에틸아민','염산 에탄올아민','염산 L-시스틴','염산 프로티오카브','데메클로사이클린 염산염','L-글루타민 산','아미노비페닐 염산염','나트륨 하이포아염산염 오수화물',$tt,$ttt,'처음으로'
 				'buttons' => $searchChemlist
+				//'buttons' => $chemlist_chemid
 				
 			)
 		)
