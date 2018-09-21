@@ -1,26 +1,31 @@
 <?php
 // 요청 저장함
+include("functions/functions_afteraction.php");
 $data = json_decode(file_get_contents('php://input'), true);
 // 요청에서 content 항목 결정
 $content = $data["content"];
 $user_key = $data["user_key"];
 //$info_array = array("화학제품에 대한 정보","유해성, 위험성","응급조치 요령","폭발, 화재시 대처방법","누출사고시 대처방법");
-$info_array = array("의 정보","의 유해성과 위험성","의 응급조치 요령","의 폭발 및 화재시 대처방법","의 누출사고시 대처방법");
+$info_array = array("의정보","의 유해성과 위험성","의응급조치요령","의폭발및화재시대처방법","의누출사고시대처방법");
 //$type = $data['type'];
 // $user_key = $data[
 // $content = '대화시작';
+
 $len_info_array = count($info_array);
+
+if(strpos($content,'#')!== false){
+	functions_afteraction($content);
+}
 
 if(strpos($content,'*') !== false){
 	//$content2 = (string)strstr($content,'*');
 	//$content2_divide = explode('*', $content2);
-	$content2 = str_replace('*','',$content);
-	
+	$content2 = str_replace("*","",$content);
 	
 	
 	for($len_i=0; $len_i<$len_info_array; $len_i++)
 	{
-		$info_array_output = $info_array_output.$content2.$info_array[$len_i].'&';
+		$info_array_output = $info_array_output.'#'.$content2.$info_array[$len_i].'&';
 		
 		//$chemlist = $chemlist.'*'.$x->chemNameKor.'&';
 		//$searchChemlist = explode('&', $chemlist);
@@ -33,7 +38,7 @@ if(strpos($content,'*') !== false){
 	echo json_encode(
 		array(
 			'message' => array(
-				'text' => "조회한 화학물질명은 [".$info_array_output."] 입니다."
+				'text' => "조회한 화학물질명은 [".$content."] 입니다."
 //				'text' => $info_array_output
 			),
 			//'buttons' => array(
@@ -45,6 +50,8 @@ if(strpos($content,'*') !== false){
 		)
 	);
 }
+
+
 
 if(strcmp($content,'대화 시작') == false || strcmp($content,'처음으로')==false) {
 	echo json_encode(
@@ -99,7 +106,7 @@ else{
 	for ($i = 0; $i<$num ; $i++)
 	{
 		//검색된 화학물질명 읽어오고
-		$x = $xml_info->body->items->item[$i];		
+		$x = $xml_info->body->items->item[$i];
 		
 		$chemlist = $chemlist.'*'.$x->chemNameKor.'&';
 		/*
@@ -108,7 +115,7 @@ else{
 	
 		$query_action = "http://msds.kosha.or.kr/openapi/service/msdschem/chemdetail04?chemId=$x_n&ServiceKey=QgcZ7AnmeeqX394vEJHPd7sO%2BdK6XCTAWBgvaoI7RLQXODtOpMYjr7lrDYgfRt863BqDPPpfQ4rL2C%2BROWMsUA%3D%3D";
 		$myXMLData_action = file_get_contents($query_action);
-			$xml_action = simplexml_load_string($myXMLData_action) or die("Error : cannot create object");
+		$xml_action = simplexml_load_string($myXMLData_action) or die("Error : cannot create object");
 
 		$k = $xml_action->body->items->item[$i];
 
@@ -125,7 +132,6 @@ else{
 	echo json_encode(
 		array(
 			'message' => array(
-				//'text' => $sun_info
 				'text' => "검색한 화학물질은 ".$content."입니다."."\n"."검색된 화학물질명이 포함된 물질은 총 ".$num."개 입니다. 조회를 원하는 물질명을 선택해주세요."
 			),
 			'keyboard' => array(
@@ -146,9 +152,9 @@ else{
 			)
 		);
 	}*/
+	/*
 	
 	//'화학제품에 대한 정보','유해성, 위험성','응급조치 요령','폭발, 화재시 대처방법','누출사고시 대처방법','처음으로'
-
 	if(strcmp($content,'화학제품에 대한 정보')==false){
 		functions_afteraction();
 	}
@@ -179,27 +185,6 @@ else{
 					)
 			);
 	}
-	
-	/*
-	else if(strpos($content,'조회') !== false){
-
-		$cut_stringTok = explode(' ',$content);
-		$content2 = (string)$cut_stringTok[0];
-		echo json_encode(
-					array(
-							'message' => array(
-									'text' => "조회를 시도한 화학물질명은 [".$content2."] 입니다."
-							),
-							'keyboard' => array(
-									'type' => 'buttons',
-									'buttons' => array(
-											'화학제품에 대한 정보','유해성, 위험성','응급조치 요령','폭발, 화재시 대처방법','누출사고시 대처방법','처음으로'
-									)
-							)
-					)
-			);
-	}
-	*/
 	else{
 		echo json_encode(
 					array(
@@ -214,6 +199,7 @@ else{
 							)
 					)
 			);
-	}	
+	}
+	*/
 }
 ?>
