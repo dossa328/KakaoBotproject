@@ -26,16 +26,20 @@ function functions_afteraction($fcontent)
 	*/
 	
 	//str_replace(' ', '&nbsp;', $stringVariable); //공백 보존?
+	
 	if(strpos($fcontent,'#')!==false)
 	{
 		//사용법임. $result = strstr("가나다라마바사", "다라"); 결과값 $result = "다라마바사"
+		
+		//strstr()-> 찾고 싶은 문자를 찾은 후 그 이후 값까지 반환해주는 함수.
 		$fcontent_del = strstr($fcontent,"의");
 		$fcontent2 = str_replace($fcontent_del,'',$fcontent);
-		$fcontent2 = str_replace(' ', '&nbsp;',$fcontent2);
+		//$fcontent2 = str_replace(' ', '&nbsp;',$fcontent2);
 		$fcontent2 = str_replace("#",'', $fcontent2);
+		$fcontent2_addplus = str_replace(" ",'+',$fcontent2);
 		//$sss = $finfo_array_output_fianl;
 		
-		$query_info = "http://msds.kosha.or.kr/openapi/service/msdschem/chemlist?searchCnd=0&searchWrd=$fcontent2&ServiceKey=QgcZ7AnmeeqX394vEJHPd7sO%2BdK6XCTAWBgvaoI7RLQXODtOpMYjr7lrDYgfRt863BqDPPpfQ4rL2C%2BROWMsUA%3D%3D";
+		$query_info = "http://msds.kosha.or.kr/openapi/service/msdschem/chemlist?searchCnd=0&searchWrd=$fcontent2_addplus&ServiceKey=QgcZ7AnmeeqX394vEJHPd7sO%2BdK6XCTAWBgvaoI7RLQXODtOpMYjr7lrDYgfRt863BqDPPpfQ4rL2C%2BROWMsUA%3D%3D";
 		$myXMLData_info = file_get_contents($query_info);
 		$xml_info = simplexml_load_string($myXMLData_info) or die("Error: Cannot create object");
 		
@@ -96,11 +100,12 @@ function functions_afteraction($fcontent)
 			$myXMLData_action = file_get_contents($query_action);
 			$xml_action = simplexml_load_string($myXMLData_action) or die("Error : cannot create object");
 		}
-		else if(strcmp($fcontent,'폭발 및 화재시 대처방법')==false){
+		else if(strcmp($fcontent,'폭발 및 화재시 대처 방법')==false){
 						
 		}
-		else if(strpos($fcontent,'의누출사고시대처방법')!==false)
+		else if(strpos($fcontent,'의 누출사고시 대처 방법')!==false)
 		{
+			
 			$query_detail06 = "http://msds.kosha.or.kr/openapi/service/msdschem/chemdetail06?chemId=$chemId_input&ServiceKey=QgcZ7AnmeeqX394vEJHPd7sO%2BdK6XCTAWBgvaoI7RLQXODtOpMYjr7lrDYgfRt863BqDPPpfQ4rL2C%2BROWMsUA%3D%3D";
 			$myXMLData_detail06 = file_get_contents($query_detail06);
 			$xml_detail06 = simplexml_load_string($myXMLData_detail06) or die("Error : cannot create object");

@@ -6,7 +6,7 @@ $data = json_decode(file_get_contents('php://input'), true);
 $content = $data["content"];
 $user_key = $data["user_key"];
 //$info_array = array("화학제품에 대한 정보","유해성, 위험성","응급조치 요령","폭발, 화재시 대처방법","누출사고시 대처방법");
-$info_array = array("의정보","의 유해성과 위험성","의응급조치요령","의폭발및화재시대처방법","의누출사고시대처방법");
+$info_array = array("의정보","의 유해성과 위험성","의응급조치요령","의폭발및화재시대처방법","의 누출사고시 대처 방법");
 //$type = $data['type'];
 // $user_key = $data[
 // $content = '대화시작';
@@ -81,7 +81,6 @@ else{
 	
 	$myXMLData_info = file_get_contents($query_info);
 	$xml_info = simplexml_load_string($myXMLData_info) or die("Error: Cannot create object");
-	
 	
 	$num = count($xml_info->body->items->item);
 	for ($i = 0; $i<$num ; $i++)
